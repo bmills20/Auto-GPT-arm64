@@ -163,9 +163,3 @@ openai/
 
 # news
 CURRENT_BULLETIN.md
-
-# fork specific
-AutoGpt.json
-ai_settings.yaml.zip
-auto-gpt-arm64.tar
-auto-gpt-arm64/
