@@ -2,11 +2,11 @@
 ARG BUILD_TYPE=dev
 
 # Use an official Python base image from the Docker Hub
-FROM python:3.10-bullseye
+FROM python:3.10-bullseye AS base
 
 # Install browsers
 RUN apt-get update && apt-get install -y \
-    chromium-driver firefox-esr \
+    chromium chromium-driver firefox-esr \
     ca-certificates
 
 # Install utilities
@@ -25,13 +25,13 @@ COPY requirements.txt .
 ENTRYPOINT ["python", "-m", "autogpt"]
 
 # dev build -> include everything
-FROM autogpt-base as autogpt-dev
+FROM base as autogpt-dev
 RUN pip install --no-cache-dir -r requirements.txt
 WORKDIR /app
 ONBUILD COPY . ./
 
 # release build -> include bare minimum
-FROM autogpt-base as autogpt-release
+FROM base as autogpt-release
 RUN sed -i '/Items below this point will not be included in the Docker Image/,$d' requirements.txt && \
 	pip install --no-cache-dir -r requirements.txt
 WORKDIR /app
